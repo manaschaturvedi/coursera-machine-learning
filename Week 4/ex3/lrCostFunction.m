@@ -36,18 +36,10 @@ grad = zeros(size(theta));
 %           grad = grad + YOUR_CODE_HERE (using the temp variable)
 %
 
-
 h = sigmoid(X*theta);
 regularized_part = (lambda/(2*m))*sum(theta(2:size(theta)).*theta(2:size(theta)));
 J_og = (-1/m)*sum((y.*log(h)) + ((1-y).*log(1-h)));
 J = J_og + regularized_part;
-
-disp('********************************************************************');
-disp(size(X(:,2:end)'));
-disp(size((h-y)));
-disp(size(theta));
-%disp(size(theta(2:end)));
-disp('********************************************************************');
 
 %for j = 1:size(theta)
 %  if(j == 1)
@@ -59,11 +51,7 @@ disp('********************************************************************');
 
 grad(1) = (1/m)*sum((h-y).*X(:,1));
 X_term = X(:,2:end)';
-grad(2:end) = (1/m)*sum(X_term*(h-y)) + ((lambda/m)*theta(2:end));
-
-
-
-
+grad(2:end) = (1/m)*(X_term*(h-y)) + ((lambda/m)*theta(2:end));
 
 % =============================================================
 
