@@ -21,13 +21,13 @@ p = zeros(size(X, 1), 1);
 %       can use max(A, [], 2) to obtain the max for each row.
 %
 
-
-
-
-
-
-
-
+X = [ones(size(X, 1), 1) X];
+Z2 = X*Theta1';
+a2 = sigmoid(Z2);
+a2 = [ones(size(a2, 1), 1) a2];
+Z3 = a2*Theta2';
+h = sigmoid(Z3);
+[predicted_class,p] = max(h,[],2);
 
 % =========================================================================
 
