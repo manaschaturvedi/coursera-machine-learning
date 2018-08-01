@@ -87,9 +87,54 @@ regularized_part = (lambda/(2*m))*(sum(sum(Theta1_new.^2))+sum(sum(Theta2_new.^2
 % regularized cost function
 J = J + regularized_part;
 
-disp('-----------------------------------------------');
-disp(J);
-%disp(size(y_new));
+% backpropagation algorithm
+for i=1:m
+  % Step 1
+	a1 = X(i,:); % X already have a bias Line 44 (1*401)
+	z2 = Theta1*a1'; % (25*401)*(401*1)
+	a2 = sigmoid(z2); % (25*1)
+    
+  a2 = [1;a2]; % adding a bias (26*1)
+	z3 = Theta2*a2; % (10*26)*(26*1)
+	a3 = sigmoid(z3); % final activation layer a3 == h(theta) (10*1)
+  
+  % Step 2
+	delta_3 = a3-y_new(i,:)'; % (10*1)
+  z2=[1; z2]; % bias (26*1)
+  
+  % Step 3
+  delta_2 = (Theta2'*delta_3).*sigmoidGradient(z2); % ((26*10)*(10*1))=(26*1)
+  
+  % Step 4
+	delta_2 = delta_2(2:end); % skipping sigma2(0) (25*1)
+	Theta2_grad = Theta2_grad + delta_3 * a2'; % (10*1)*(1*26)
+	Theta1_grad = Theta1_grad + delta_2 * a1; % (25*1)*(1*401)
+end;
+
+% Step 5
+Theta2_grad = (1/m) * Theta2_grad; % (10*26)
+Theta1_grad = (1/m) * Theta1_grad; % (25*401)
+
+
+% Part 3: Implement regularization with the cost function and gradients.
+%
+%         Hint: You can implement this around the code for
+%               backpropagation. That is, you can compute the gradients for
+%               the regularization separately and then add them to Theta1_grad
+%               and Theta2_grad from Part 2.
+
+% Regularization
+
+% Theta1_grad(:, 1) = Theta1_grad(:, 1) ./ m; % for j = 0
+% 
+Theta1_grad(:, 2:end) = Theta1_grad(:, 2:end) + ((lambda/m) * Theta1(:, 2:end)); % for j >= 1 
+% 
+% Theta2_grad(:, 1) = Theta2_grad(:, 1) ./ m; % for j = 0
+% 
+Theta2_grad(:, 2:end) = Theta2_grad(:, 2:end) + ((lambda/m) * Theta2(:, 2:end)); % for j >= 1
+
+% Unroll gradients
+grad = [Theta1_grad(:) ; Theta2_grad(:)];
 
 
 
